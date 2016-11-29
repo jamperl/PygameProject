@@ -1,7 +1,6 @@
 import pygame
 from pygame import *
 from pygame.sprite import *
-from pygame.locals import *
 import random
 
 WINDOW_WIDTH = 640
@@ -15,7 +14,7 @@ pygame.init()
 
 screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 big_house = pygame.image.load('field.bmp')
-pygame.transform.scale(big_house, (WINDOW_WIDTH, WINDOW_HEIGHT))
+big_house = pygame.transform.scale(big_house, (WINDOW_WIDTH, WINDOW_HEIGHT))
 
 pygame.display.set_caption("Champions of the West")
 
@@ -33,17 +32,16 @@ class Jabrill(pygame.sprite.Sprite):
 		self.rect.centerx = WINDOW_WIDTH/2
 		self.rect.bottom = WINDOW_HEIGHT - 5
 
-		self.horiz = 0
-		self.lives = 1
 
 	def update(self):
 		keys = pygame.key.get_pressed()
 
-		slide = 15
+		self.horiz = 0
+		
 		if keys[K_LEFT]:
-			self.horiz = (-1) * slide
+			self.horiz -= 15
 		if keys[K_RIGHT]:
-			self.horiz = slide
+			self.horiz += 15
 		if keys[K_SPACE]:
 			self.shoot()
 
@@ -54,15 +52,17 @@ class Jabrill(pygame.sprite.Sprite):
 		if self.rect.right > WINDOW_WIDTH:
 			self.rect.right = WINDOW_WIDTH
 
-	# def shoot(self):
-	# 	bullet = Helmet(self.centerx, self.top)
+	def shoot(self):
+		helmet = Helmet(self.rect.centerx, self.rect.top)
+		sprites_list.add(helmet)
+
 
 class Rival(pygame.sprite.Sprite):
 	def __init__(self):
 		pygame.sprite.Sprite.__init__(self)
 
-		self.width = 60
-		self.height = 95
+		self.width = 50
+		self.height = 55
 
 		self.school_pics = ['osu.bmp', 'msu.bmp', 'psu.bmp', 'minn.bmp', 'nebrask.bmp', 'wisco.bmp']
 		self.new_school_pics = []
@@ -85,6 +85,24 @@ class Rival(pygame.sprite.Sprite):
 			self.rect.x = random.randrange((0 + self.rect.width), (WINDOW_WIDTH - self.rect.width))
 			self.vert = random.randrange(3, 10)
 
+class Helmet(pygame.sprite.Sprite):
+	def __init__(self, x, y):
+		pygame.sprite.Sprite.__init__(self)
+
+		self.width = 25
+		self.height = 25
+
+		self.image = pygame.image.load('mich.bmp')
+		self.image = pygame.transform.scale(self.image, (self.width, self.height))
+		self.rect = self.image.get_rect()
+		self.rect.centerx = x
+		self.rect.top = y
+		self.vert = -2
+
+	def update(self):
+		self.rect.y += self.vert
+
+
 
 sprites_list = pygame.sprite.Group()
 jabrill = Jabrill()
@@ -96,7 +114,7 @@ for x in range(8):
 	sprites_list.add(rival)
 	schools.add(rival)
 
-#helmets = pygame.sprite.Group()
+helmets = pygame.sprite.Group()
 
 gameExit = False
 while not gameExit:
