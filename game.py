@@ -23,16 +23,16 @@ class Jabrill(pygame.sprite.Sprite):
 		self.rect.centerx = screen_width/2
 		self.rect.bottom = screen_height - 5
 
-		self.speed = 1
+		self.horiz = 1
 		self.lives = 3
 
 	def update(self):
 		keys = pygame.key.get_pressed()
 
 		if key[K_LEFT]:
-			self.left -= 15
+			self.horiz = -15
 		if key[K_RIGHT]:
-			self.right += 15
+			self.horiz = 15
 		if key[K_SPACE]:
 			self.shoot()
 
@@ -44,6 +44,7 @@ class Jabrill(pygame.sprite.Sprite):
 	# def shoot(self):
 	# 	bullet = Helmet(self.centerx, self.top)
 
+pygame.mixer.init()
 pygame.init()
 
 big_house = pygame.image.load("field.bmp")
