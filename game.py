@@ -26,10 +26,10 @@ class Jabrill(pygame.sprite.Sprite):
 		self.width = 80
 		self.height = 130
 
-		self.pic = pygame.image.load('jabrill.bmp')
-		self.pic = pygame.transform.scale(self.pic, (self.width, self.height))
+		self.image = pygame.image.load('jabrill.bmp')
+		self.image = pygame.transform.scale(self.image, (self.width, self.height))
 
-		self.rect = self.pic.get_rect()
+		self.rect = self.image.get_rect()
 		self.rect.centerx = WINDOW_WIDTH/2
 		self.rect.bottom = WINDOW_HEIGHT - 5
 
@@ -40,14 +40,14 @@ class Jabrill(pygame.sprite.Sprite):
 		keys = pygame.key.get_pressed()
 
 		slide = 15
-		if key[K_LEFT]:
+		if keys[K_LEFT]:
 			self.horiz = (-1) * slide
-		if key[K_RIGHT]:
+		if keys[K_RIGHT]:
 			self.horiz = slide
-		if key[K_SPACE]:
+		if keys[K_SPACE]:
 			self.shoot()
 
-		self.rect.pos += self.horiz
+		self.rect.x += self.horiz
 
 		if self.rect.left < 0:
 			self.rect.left = 0
@@ -64,26 +64,25 @@ class Rival(pygame.sprite.Sprite):
 		self.width = 60
 		self.height = 95
 
-
-		self.school_pics = ['osu.bmp', 'msu.bmp']
+		self.school_pics = ['osu.bmp', 'msu.bmp', 'psu.bmp', 'minn.bmp', 'nebrask.bmp', 'wisco.bmp']
 		self.new_school_pics = []
 		for pic in self.school_pics:
-			self.img = pygame.image.load(pic)
-			self.img = pygame.transform.scale(self.pic, (self.width, self.height))
-			self.new_school_pics.append(self.img)
+			self.image = pygame.image.load(pic)
+			self.image = pygame.transform.scale(self.image, (self.width, self.height))
+			self.new_school_pics.append(self.image)
 
-		self.pic = random.choice(self.new_school_pics)
-		self.rect = self.pic.get_rect()
+		self.image = random.choice(self.new_school_pics)
+		self.rect = self.image.get_rect()
 
-		self.rect.start = -20
-		self.rect.pos = random.randrange(0, (WINDOW_WIDTH - self.rect.WINDOW_WIDTH))
-		self.vert = random.randrange(3, 10)
+		self.rect.y = -20
+		self.rect.x = random.randrange(0, (WINDOW_WIDTH - self.rect.width))
+		self.vert = random.randrange(1, 13)
 
 	def update(self):
-		self.rect.start += self.vert
+		self.rect.y += self.vert
 		if self.rect.top > WINDOW_HEIGHT - 5:
-			self.rect.start = -20
-			self.rect.pos = random.randrange((0 + self.rect.width), (WINDOW_WIDTH - self.rect.width))
+			self.rect.y = -20
+			self.rect.x = random.randrange((0 + self.rect.width), (WINDOW_WIDTH - self.rect.width))
 			self.vert = random.randrange(3, 10)
 
 
@@ -91,7 +90,7 @@ sprites_list = pygame.sprite.Group()
 jabrill = Jabrill()
 sprites_list.add(jabrill)
 
-schools = pygame.sprit.Group()
+schools = pygame.sprite.Group()
 for x in range(8):
 	rival = Rival()
 	sprites_list.add(rival)
@@ -99,14 +98,13 @@ for x in range(8):
 
 #helmets = pygame.sprite.Group()
 
-
 gameExit = False
 while not gameExit:
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			gameExit = True
-	screen.blit(big_house, (0,0))
 	sprites_list.update()
+	screen.blit(big_house, (0,0))
 	sprites_list.draw(screen)
 
 	pygame.display.flip()
