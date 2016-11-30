@@ -60,7 +60,7 @@ class Rival(pygame.sprite.Sprite):
 		self.width = 40
 		self.height = 45
 
-		self.school_pics = ['osu.bmp', 'msu.bmp', 'psu.bmp', 'minn.bmp', 'nebrask.bmp', 'wisco.bmp']
+		self.school_pics = ['osu.bmp', 'msu.bmp', 'psu.bmp', 'minn.bmp', 'nebrask.bmp', 'wisco.bmp', 'north.bmp', 'mary.bmp', 'pur.bmp', 'iu.bmp', 'ill.bmp', 'iowa.bmp']
 		self.new_school_pics = []
 		for pic in self.school_pics:
 			self.image = pygame.image.load(pic)
@@ -79,7 +79,7 @@ class Rival(pygame.sprite.Sprite):
 		if self.rect.top > WINDOW_HEIGHT - 5:
 			self.rect.y = -20
 			self.rect.x = random.randrange((0 + self.rect.width), (WINDOW_WIDTH - self.rect.width))
-			self.vert = random.randrange(3, 10)
+			self.vert = random.randrange(4, 9)
 
 class Helmet(pygame.sprite.Sprite):
 	def __init__(self, x, y):
@@ -93,7 +93,7 @@ class Helmet(pygame.sprite.Sprite):
 		self.rect = self.image.get_rect()
 		self.rect.centerx = x
 		self.rect.top = y
-		self.vert = -2
+		self.vert = -5
 
 	def update(self):
 		self.rect.y += self.vert
