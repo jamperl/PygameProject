@@ -6,16 +6,12 @@ import random
 WINDOW_WIDTH = 640
 WINDOW_HEIGHT = 500
 
-WHITE = (255, 255, 255)
-RED = (255, 0, 0)
-
 pygame.mixer.init()
 pygame.init()
 
 screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 big_house = pygame.image.load('field.bmp')
 big_house = pygame.transform.scale(big_house, (WINDOW_WIDTH, WINDOW_HEIGHT))
-
 pygame.display.set_caption("Champions of the West")
 
 class Jabrill(pygame.sprite.Sprite):
@@ -61,8 +57,8 @@ class Rival(pygame.sprite.Sprite):
 	def __init__(self):
 		pygame.sprite.Sprite.__init__(self)
 
-		self.width = 50
-		self.height = 55
+		self.width = 40
+		self.height = 45
 
 		self.school_pics = ['osu.bmp', 'msu.bmp', 'psu.bmp', 'minn.bmp', 'nebrask.bmp', 'wisco.bmp']
 		self.new_school_pics = []
