@@ -1,19 +1,28 @@
 import pygame
 from pygame import *
 from pygame.sprite import *
+from pygame.locals import *
 import random
-import time
+import sys
 
 WINDOW_WIDTH = 960
 WINDOW_HEIGHT = 675
+WHITE = (255, 255, 255)
 
 pygame.mixer.init()
 pygame.init()
 
+myfont = pygame.font.SysFont("monospace", 16)
 screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 big_house = pygame.image.load('field.bmp')
 big_house = pygame.transform.scale(big_house, (WINDOW_WIDTH, WINDOW_HEIGHT))
 pygame.display.set_caption("Champions of the West")
+
+myfont = pygame.font.SysFont("monospace", 20)
+
+
+pygame.mixer.music.load('hail2.mp3')
+pygame.mixer.music.play(loops= -1)
 
 class Jabrill(pygame.sprite.Sprite):
 	def __init__(self):
@@ -29,6 +38,7 @@ class Jabrill(pygame.sprite.Sprite):
 		self.rect.centerx = WINDOW_WIDTH/2
 		self.rect.bottom = WINDOW_HEIGHT - 5
 
+		self.lives = 3
 
 	def update(self):
 		keys = pygame.key.get_pressed()
@@ -39,7 +49,7 @@ class Jabrill(pygame.sprite.Sprite):
 			self.horiz -= 15
 		if keys[K_RIGHT]:
 			self.horiz += 15
-		if keys[K_SPACE]:
+		if keys[K_SPACE] and len(helmets) < 10:
 			self.shoot()
 			
 
@@ -67,10 +77,11 @@ class Rival(pygame.sprite.Sprite):
 		self.new_school_pics = []
 		for pic in self.school_pics:
 			self.image = pygame.image.load(pic)
-			self.image = pygame.transform.scale(self.image, (self.width, self.height))
 			self.new_school_pics.append(self.image)
 
 		self.image = random.choice(self.new_school_pics)
+		self.image = pygame.transform.scale(self.image, (self.width, self.height))
+
 		self.rect = self.image.get_rect()
 
 		self.rect.y = -20
@@ -100,11 +111,9 @@ class Helmet(pygame.sprite.Sprite):
 
 	def update(self):
 		self.rect.y += self.vert
-		if self.rect.y > WINDOW_HEIGHT - 5:
-			self.kill()
+		if self.rect.y > WINDOW_HEIGHT + 5:
+			helmets.remove(self)
 		
-
-
 
 sprites_list = pygame.sprite.Group()
 jabrill = Jabrill()
@@ -118,7 +127,6 @@ for x in range(8):
 
 helmets = pygame.sprite.Group()
 
-
 gameExit = False
 while not gameExit:
 	for event in pygame.event.get():
@@ -128,18 +136,19 @@ while not gameExit:
 	
 	for helmet in helmets:
 		collisions = pygame.sprite.groupcollide(schools, helmets, True, True)
-		for collision in collisions:
+		if collisions:
 			helmets.remove(helmet)
-			schools = pygame.sprite.Group()
-			rival = Rival()
-			sprites_list.add(rival)
-			schools.add(rival)
-	
-	if pygame.sprite.spritecollide(jabrill, schools, True):	
+	jabrill_lives = pygame.sprite.spritecollide(jabrill, schools, True)	
+	if jabrill_lives:
+		jabrill.lives -= 1
+
+	if jabrill.lives < 1:
 		gameExit = True
+
+	life_count = myfont.render('Lives: ' + str(jabrill.lives), 1, WHITE)
 	screen.blit(big_house, (0,0))
 	sprites_list.draw(screen)
-
+	screen.blit(life_count, (20, 20))
 	pygame.display.flip()
 pygame.quit()
 quit()
