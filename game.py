@@ -2,9 +2,10 @@ import pygame
 from pygame import *
 from pygame.sprite import *
 import random
+import time
 
-WINDOW_WIDTH = 640
-WINDOW_HEIGHT = 500
+WINDOW_WIDTH = 960
+WINDOW_HEIGHT = 675
 
 pygame.mixer.init()
 pygame.init()
@@ -40,6 +41,7 @@ class Jabrill(pygame.sprite.Sprite):
 			self.horiz += 15
 		if keys[K_SPACE]:
 			self.shoot()
+			self
 
 		self.rect.x += self.horiz
 
@@ -51,6 +53,7 @@ class Jabrill(pygame.sprite.Sprite):
 	def shoot(self):
 		helmet = Helmet(self.rect.centerx, self.rect.top)
 		sprites_list.add(helmet)
+		helmets.add(helmet)
 
 
 class Rival(pygame.sprite.Sprite):
@@ -93,7 +96,7 @@ class Helmet(pygame.sprite.Sprite):
 		self.rect = self.image.get_rect()
 		self.rect.centerx = x
 		self.rect.top = y
-		self.vert = -5
+		self.vert = -4
 
 	def update(self):
 		self.rect.y += self.vert
@@ -112,12 +115,24 @@ for x in range(8):
 
 helmets = pygame.sprite.Group()
 
+
 gameExit = False
 while not gameExit:
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			gameExit = True
 	sprites_list.update()
+	
+	collisions = pygame.sprite.groupcollide(schools, helmets, True, True)
+	for collision in collisions:
+		schools = pygame.sprite.Group()
+		rival = Rival()
+		sprites_list.add(rival)
+		schools.add(rival)
+	
+	game_end = pygame.sprite.spritecollide(jabrill, schools, False)
+	if game_end:	
+		gameExit = True
 	screen.blit(big_house, (0,0))
 	sprites_list.draw(screen)
 
