@@ -157,6 +157,8 @@ while not gameExit:
 	sprites_list.draw(screen)
 	screen.blit(life_count, (20, 20))
 	screen.blit(score_count, (WINDOW_WIDTH - 220, 20))
+
 	pygame.display.flip()
+	
 pygame.quit()
 quit()
