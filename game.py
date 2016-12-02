@@ -9,6 +9,11 @@ WINDOW_WIDTH = 960
 WINDOW_HEIGHT = 675
 WHITE = (255, 255, 255)
 
+finalscore_x = 200
+finalscore_y = (WINDOW_HEIGHT/2) - 75
+gameover_x = 320
+gameover_y = finalscore_y + 100
+
 pygame.mixer.init()
 pygame.init()
 
@@ -17,7 +22,8 @@ big_house = pygame.image.load('field.bmp')
 big_house = pygame.transform.scale(big_house, (WINDOW_WIDTH, WINDOW_HEIGHT))
 pygame.display.set_caption("Champions of the West")
 
-myfont = pygame.font.SysFont("monospace", 30, bold=True)
+myfont = pygame.font.SysFont("helvetica", 30, bold=True)
+myfont2 = pygame.font.SysFont("helvetica", 60, bold=True)
 
 
 pygame.mixer.music.load('hail2.mp3')
@@ -27,15 +33,15 @@ class Jabrill(pygame.sprite.Sprite):
 	def __init__(self):
 		pygame.sprite.Sprite.__init__(self)
 
-		self.width = 80
-		self.height = 130
+		self.width = 95
+		self.height = 140
 
 		self.image = pygame.image.load('jabrill.bmp')
 		self.image = pygame.transform.scale(self.image, (self.width, self.height))
 
 		self.rect = self.image.get_rect()
 		self.rect.centerx = WINDOW_WIDTH/2
-		self.rect.bottom = WINDOW_HEIGHT - 5
+		self.rect.bottom = WINDOW_HEIGHT - 15
 
 		self.lives = 3
 		self.score = 0
@@ -120,45 +126,59 @@ jabrill = Jabrill()
 sprites_list.add(jabrill)
 
 schools = pygame.sprite.Group()
-for x in range(14):
+for x in range(15):
 		rival = Rival()
 		sprites_list.add(rival)
 		schools.add(rival)
 
 helmets = pygame.sprite.Group()
 
-gameExit = False
-while not gameExit:
+game_exit = False
+done = False
+while not done:
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
-			gameExit = True
+			done = True
 
-	sprites_list.update()
-	
-	for helmet in helmets:
-		collisions = pygame.sprite.groupcollide(schools, helmets, True, True)
-		if collisions:
-			helmets.remove(helmet)
-			jabrill.score += 100
-	if len(schools) < 13:
-		rival = Rival()
-		sprites_list.add(rival)
-		schools.add(rival)
-	jabrill_lives = pygame.sprite.spritecollide(jabrill, schools, True)	
-	if jabrill_lives:
-		jabrill.lives -= 1
+		elif event.type == pygame.KEYDOWN:
+			if event.key == K_RETURN:
+				done = True
 
-	if jabrill.lives < 1:
-		gameExit = True
+	if not game_exit:
+		sprites_list.update()
+		
+		for helmet in helmets:
+			collisions = pygame.sprite.groupcollide(schools, helmets, True, True)
+			if collisions:
+				helmets.remove(helmet)
+				jabrill.score += 100
+		if len(schools) < 14:
+			rival = Rival()
+			sprites_list.add(rival)
+			schools.add(rival)
+		jabrill_lives = pygame.sprite.spritecollide(jabrill, schools, True)	
+		if jabrill_lives:
+			jabrill.lives -= 1
 
-	life_count = myfont.render('Lives: ' + str(jabrill.lives), 1, WHITE)
-	score_count = myfont.render('Score: ' + str(jabrill.score), 1, WHITE)
-	screen.blit(big_house, (0,0))
-	sprites_list.draw(screen)
-	screen.blit(life_count, (20, 20))
-	screen.blit(score_count, (WINDOW_WIDTH - 220, 20))
+		if jabrill.lives < 1:
+			game_exit = True
+
+		life_count = myfont.render('Lives: ' + str(jabrill.lives), 1, WHITE)
+		score_count = myfont.render('Score: ' + str(jabrill.score), 1, WHITE)
+		screen.blit(big_house, (0,0))
+		sprites_list.draw(screen)
+		screen.blit(life_count, (20, 20))
+		screen.blit(score_count, (WINDOW_WIDTH - 220, 20))
+
+	else:
+		harbaugh = pygame.image.load('harbaugh.bmp')
+		harbaugh = pygame.transform.scale(harbaugh, (WINDOW_WIDTH, WINDOW_HEIGHT))
+		game_over = myfont.render('HIT RETURN TO EXIT', 1, WHITE)
+		update_score = myfont2.render('FINAL SCORE: ' + str(jabrill.score), 1, WHITE)
+		screen.blit(harbaugh, (0,0))
+		screen.blit(update_score, (finalscore_x, finalscore_y))
+		screen.blit(game_over, (gameover_x, gameover_y))
 
 	pygame.display.flip()
 	
 pygame.quit()
-quit()
