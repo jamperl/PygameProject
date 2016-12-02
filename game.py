@@ -33,8 +33,8 @@ class Jabrill(pygame.sprite.Sprite):
 	def __init__(self):
 		pygame.sprite.Sprite.__init__(self)
 
-		self.width = 95
-		self.height = 140
+		self.width = 105
+		self.height = 130
 
 		self.image = pygame.image.load('jabrill.bmp')
 		self.image = pygame.transform.scale(self.image, (self.width, self.height))
