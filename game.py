@@ -91,8 +91,8 @@ class Rival(pygame.sprite.Sprite):
 	def __init__(self):
 		pygame.sprite.Sprite.__init__(self)
 
-		self.width = 40
-		self.height = 45
+		self.width = 45
+		self.height = 49
 		#load all big 10 rival pictures
 		self.school_pics = ['osu.bmp', 'msu.bmp', 'psu.bmp', 'minn.bmp', 'nebrask.bmp', 'wisco.bmp', 'north.bmp', 'mary.bmp', 'pur.bmp', 'iu.bmp', 'ill.bmp', 'iowa.bmp']
 		self.new_school_pics = []
